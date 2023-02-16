@@ -1,0 +1,72 @@
+#include <iostream>
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+#include <fstream>
+using namespace std;
+/*
+Проверить, расположены ли элементы k-ой строки матрицы в
+порядке убывания. Если нет, определить, встречается ли значение k в этой
+строке, используя алгоритм линейного поиска. Значение k (k <= N) вводится с
+клавиатуры
+*/
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    float w;
+    ifstream in("1.txt");
+    fstream out("2.txt", ios::binary | ios::out | ios::in);
+    int N, M;
+    in >> N >> M;
+    cout << N << " " << M << endl;
+    out.write((char*)&N, sizeof(int));
+    out.write((char*)&M, sizeof(int));
+    int* A = new int[M];
+    for (int i = 0; i < N; ++i)
+    {
+        for (int j = 0; j < M; ++j)
+        {
+            in >> A[j];
+            cout << " " << A[j] << " ";
+        }
+        out.write((char*)A, sizeof(int) * M);
+        cout << endl;
+    }
+    in.close();
+
+    int k;
+    cout << endl << "Введите к: ";
+    cin >> k; cout << endl;
+    --k;
+    // g - чтение, p - вывод
+    out.seekp(0, ios_base::beg);
+    out.read((char*)&N, sizeof(int));
+    out.read((char*)&M, sizeof(int));
+    out.seekg((k * M + 2) * sizeof(int));
+    out.read((char*)A, sizeof(int) * M);
+    out.close();
+    for (int i = 0; i < M; ++i)
+    {
+        cout << " " << A[i] << " ";
+    }
+    ;
+    for (int j = 0; j < M - 1; j++) {
+        if (A[j] <= A[j + 1])
+        {
+            cout << "нет" << " ";
+            for (int i = 0; i < M; ++i)
+                if (A[i] == k + 1) { cout << endl << "Такое К есть." << endl; system("pause"); return 0; }
+            cout << endl << "Таких К нет." << endl;
+            system("pause");
+            return 0;
+        }
+    }
+
+    delete[] A;
+    cout << "да" << endl;
+    system("pause");
+    return 0;
+}
